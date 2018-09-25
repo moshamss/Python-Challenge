@@ -1,4 +1,3 @@
-
 import os
 import csv
 
@@ -7,7 +6,7 @@ output_file = os.path.join("budget_output.txt")
 months = 0
 total = 0
 month_change = []
-change_list = []
+change = []
 greatest_increase = ["", 0]
 greatest_decrease = ["", 100000000000]
 
@@ -21,31 +20,30 @@ with open(data) as data:
 
     for row in reader:
         total = total + int(row[1])
-        change = int(row[1]) - previous
+        delta = int(row[1]) - previous
         previous = int(row[1])
-        change_list = change_list + [change]
+        change = change + [delta]
         month_change = month_change + [row[0]]
         months = months + 1
 
-        if change > greatest_increase[1]:
+        if delta > greatest_increase[1]:
             greatest_increase[0] = row[0]
-            greatest_increase[1] = change
+            greatest_increase[1] = delta
 
-        if change < greatest_decrease[1]:
+        if delta < greatest_decrease[1]:
             greatest_decrease[0] = row[0]
-            greatest_decrease[1] = change
+            greatest_decrease[1] = delta
 
-average_change = sum(change_list)/len(change_list)
-output = (
-    "\n"
-    f"Financial Analysis\n"
-    f"------------------\n"
-    f"Total Months: {months}\n"
-    f"Total: ${total}\n"
-    f"Average  Change: ${average_change:.2f}\n"
-    f"Greatest Increase in Profits: {greatest_increase[0]} (${greatest_increase[1]})\n"
-    f"Greatest Decrease in Profits: {greatest_decrease[0]} (${greatest_decrease[1]})\n"
-    )
+average_change = sum(change)/len(change)
+output = ("\n"
+         f"Financial Analysis\n"
+         f"------------------\n"
+         f"Total Months: {months}\n"
+         f"Total: ${total}\n"
+         f"Average  Change: ${average_change:.2f}\n"
+         f"Greatest Increase in Profits: {greatest_increase[0]} (${greatest_increase[1]})\n"
+         f"Greatest Decrease in Profits: {greatest_decrease[0]} (${greatest_decrease[1]})\n"
+         )
 print(output)
 with open(output_file, "w") as output_file:
     output_file.write(output)
